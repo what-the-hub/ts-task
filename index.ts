@@ -1,42 +1,67 @@
 console.log('hello')
 
-/*function logger(constrFn: Function) {
-    console.log(constrFn)
+//import "reflect-metadata";
+/*const requiredMetadataKey = Symbol("required");
 
-}
-
-
-function shouldLog(flag: boolean): any {
-    return flag ? logger : null
-}
-
-@shouldLog(true)
-class User {
-    constructor(public name: string, public age: number) {
-        console.log('Some text')
-    }
+function required(target: Object, propertyKey: string | symbol, parameterIndex: number) {
+    let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
+    existingRequiredParameters.push(parameterIndex);
+    Reflect.defineMetadata( requiredMetadataKey, existingRequiredParameters, target, propertyKey);
 }*/
 
+/*function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {
+    let method = descriptor.value!;
 
-function addShow (target: Object, propertyKey: string | symbol){
-    throw new Error('something wrong')
+    descriptor.value = function () {
+        throw new Error("Missing required argument.");
+
+        return method.apply(this, arguments);
+    };
+}*/
+
+function checkEmail (value: string){
+    return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+        console.log(value)
+        console.log(propertyKey)
+
+
+
+
+        console.log(descriptor.value, 'into factory')
+
+       // console.log(target.propertyIsEnumerable('email'), 'target')
+       // console.log(propertyKey, "prop")
+       // console.log(descriptor.value, 'descr')
+        //throw new Error('something wrong')
+    }
 }
 
 
 
 class User {
-    constructor(public email: string, public phone: number) {
+    email: string
+    phone: number
+    constructor(email: string, phone: number) {
+        this.email = email
+        this.phone = phone
     }
 
-    @addShow
-    getNumber () {
-        console.log(' get phone')
+    getEmail():string{
+        return this.email
+    }
+
+    @checkEmail('sdfsdf')
+    validateEmail(){
+        console.log(this.email)
+
+
+        return this.phone
 
     }
 }
 
 let user = new User('zhenia', 25324243)
-user.getNumber()
+user.validateEmail()
 
 
 

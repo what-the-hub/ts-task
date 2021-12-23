@@ -9,45 +9,55 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 console.log('hello');
-/*function logger(constrFn: Function) {
-    console.log(constrFn)
+//import "reflect-metadata";
+/*const requiredMetadataKey = Symbol("required");
 
-}
-
-
-function shouldLog(flag: boolean): any {
-    return flag ? logger : null
-}
-
-@shouldLog(true)
-class User {
-    constructor(public name: string, public age: number) {
-        console.log('Some text')
-    }
+function required(target: Object, propertyKey: string | symbol, parameterIndex: number) {
+    let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
+    existingRequiredParameters.push(parameterIndex);
+    Reflect.defineMetadata( requiredMetadataKey, existingRequiredParameters, target, propertyKey);
 }*/
-function addShow(target, propertyKey) {
-    throw new Error('something wrong');
-    //console.log('something')
+/*function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {
+    let method = descriptor.value!;
+
+    descriptor.value = function () {
+        throw new Error("Missing required argument.");
+
+        return method.apply(this, arguments);
+    };
+}*/
+function checkEmail(value) {
+    return function (target, propertyKey, descriptor) {
+        console.log(value);
+        console.log(propertyKey);
+        console.log(descriptor.value, 'into factory');
+        // console.log(target.propertyIsEnumerable('email'), 'target')
+        // console.log(propertyKey, "prop")
+        // console.log(descriptor.value, 'descr')
+        //throw new Error('something wrong')
+    };
 }
 class User {
     constructor(email, phone) {
         this.email = email;
         this.phone = phone;
-        //console.log('Some text')
     }
-    getNumber() {
-        console.log(' get phone');
-        //this.phone
+    getEmail() {
+        return this.email;
+    }
+    validateEmail() {
+        console.log(this.email);
+        return this.phone;
     }
 }
 __decorate([
-    addShow,
+    checkEmail('sdfsdf'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], User.prototype, "getNumber", null);
+], User.prototype, "validateEmail", null);
 let user = new User('zhenia', 25324243);
-user.getNumber();
+user.validateEmail();
 //import 'reflect-metadata'
 /*
 interface validationConfig {
