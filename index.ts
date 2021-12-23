@@ -20,20 +20,17 @@ class User {
 
 function addShow (target: Object, propertyKey: string | symbol){
     throw new Error('something wrong')
-    //console.log('something')
 }
 
 
 
 class User {
     constructor(public email: string, public phone: number) {
-        //console.log('Some text')
     }
 
     @addShow
     getNumber () {
         console.log(' get phone')
-        //this.phone
 
     }
 }
