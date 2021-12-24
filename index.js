@@ -9,87 +9,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 console.log('hello');
-//import "reflect-metadata";
-/*const requiredMetadataKey = Symbol("required");
-
-function required(target: Object, propertyKey: string | symbol, parameterIndex: number) {
-    let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
-    existingRequiredParameters.push(parameterIndex);
-    Reflect.defineMetadata( requiredMetadataKey, existingRequiredParameters, target, propertyKey);
-}*/
-/*function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {
-    let method = descriptor.value!;
-
-    descriptor.value = function () {
-        throw new Error("Missing required argument.");
-
-        return method.apply(this, arguments);
-    };
-}*/
-function checkEmail(value) {
+const emailReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+const phoneRegex = /^\+?3?8?(0\d{9})$/;
+const checkRegex = (email, regExp) => {
+    return email.match(regExp);
+};
+function validate(value) {
     return function (target, propertyKey, descriptor) {
-        console.log(value);
-        console.log(propertyKey);
-        console.log(descriptor.value, 'into factory');
-        // console.log(target.propertyIsEnumerable('email'), 'target')
-        // console.log(propertyKey, "prop")
-        // console.log(descriptor.value, 'descr')
-        //throw new Error('something wrong')
+        const originalFn = target[propertyKey];
+        descriptor.value = function (param) {
+            if (checkRegex(param, value))
+                return originalFn.call(this, param);
+            else {
+                throw new Error(`Something wrong with ${param}`);
+            }
+        };
     };
 }
-class User {
-    constructor(email, phone) {
-        this.email = email;
-        this.phone = phone;
+class CheckValid {
+    sendEmail(email) {
+        console.log(email);
     }
-    getEmail() {
-        return this.email;
-    }
-    validateEmail() {
-        console.log(this.email);
-        return this.phone;
+    call(phone) {
+        console.log(phone);
     }
 }
 __decorate([
-    checkEmail('sdfsdf'),
+    validate(emailReg),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], User.prototype, "validateEmail", null);
-let user = new User('zhenia', 25324243);
-user.validateEmail();
-//import 'reflect-metadata'
-/*
-interface validationConfig {
-    [property: string]: {
-        [validationProperty: string]: string[]
-    }
-}
-
-const validationObj: validationConfig = {}
-
-
-function CheckEmail(target: any, name: string) {
-    console.log(target)
-    const className = target.constructor.name
-    validationObj[className] = {
-        [name]: ['checkEmail']
-    }
-
-    console.log(validationObj)
-
-
-}
-
-class Data {
-    @CheckEmail
-    email: string
-    //phone: string
-
-    constructor(public email: string, public phone: string) {
-        this.email = email;
-        this.phone = phone
-    }
-
-}
-*/
+], CheckValid.prototype, "sendEmail", null);
+__decorate([
+    validate(phoneRegex),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], CheckValid.prototype, "call", null);
+const user = new CheckValid();
+user.sendEmail('ssd@sdda.com');
+user.call('0684008020');
