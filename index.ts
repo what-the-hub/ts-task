@@ -25,7 +25,6 @@ class CheckValid {
     sendEmail(email: string): void {
         console.log(email)
     }
-
     @validate(phoneRegex)
     call(phone: string): void {
         console.log(phone)
