@@ -3,8 +3,8 @@ console.log('hello')
 const emailReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 const phoneRegex = /^\+?3?8?(0\d{9})$/
 
-const checkRegex = (email: string, regExp: any) => {
-    return email.match(regExp)
+const checkRegex = (data: string, regExp: any) => {
+    return data.match(regExp)
 }
 
 function validate(value: RegExp): Function {
