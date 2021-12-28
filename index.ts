@@ -34,8 +34,3 @@ class CheckValid {
 const user = new CheckValid()
 user.sendEmail('ssd@sdda.com')
 user.call('0684008020')
-
-
-
-
-
