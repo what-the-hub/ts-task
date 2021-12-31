@@ -1,83 +1,36 @@
 console.log('hello')
 
-/*function logger(constrFn: Function) {
-    console.log(constrFn)
+const emailReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+const phoneRegex = /^\+?3?8?(0\d{9})$/
 
+const checkRegex = (data: string, regExp: any) => {
+    return data.match(regExp)
 }
 
-
-function shouldLog(flag: boolean): any {
-    return flag ? logger : null
-}
-
-@shouldLog(true)
-class User {
-    constructor(public name: string, public age: number) {
-        console.log('Some text')
-    }
-}*/
-
-
-function addShow (target: Object, propertyKey: string | symbol){
-    throw new Error('something wrong')
-}
-
-
-
-class User {
-    constructor(public email: string, public phone: number) {
-    }
-
-    @addShow
-    getNumber () {
-        console.log(' get phone')
-
+function validate(value: RegExp): Function {
+    return function (target: { [k in string]: any }, propertyKey: string, descriptor: PropertyDescriptor): void {
+        const originalFn = target[propertyKey];
+        descriptor.value = function (param: string) {
+            if (checkRegex(param, value))
+                return originalFn.call(this, param)
+            else {
+                throw new Error(`Something wrong with ${param}`)
+            }
+        }
     }
 }
 
-let user = new User('zhenia', 25324243)
-user.getNumber()
-
-
-
-//import 'reflect-metadata'
-
-/*
-interface validationConfig {
-    [property: string]: {
-        [validationProperty: string]: string[]
+class CheckValid {
+    @validate(emailReg)
+    sendEmail(email: string): void {
+        console.log(email)
+    }
+    @validate(phoneRegex)
+    call(phone: string): void {
+        console.log(phone)
     }
 }
 
-const validationObj: validationConfig = {}
-
-
-function CheckEmail(target: any, name: string) {
-    console.log(target)
-    const className = target.constructor.name
-    validationObj[className] = {
-        [name]: ['checkEmail']
-    }
-
-    console.log(validationObj)
-
-
-}
-
-class Data {
-    @CheckEmail
-    email: string
-    //phone: string
-
-    constructor(public email: string, public phone: string) {
-        this.email = email;
-        this.phone = phone
-    }
-
-}
-*/
-
-
-
-
-
+const user = new CheckValid()
+user.sendEmail('ssd@sdda.com')
+user.call('0684008020')
